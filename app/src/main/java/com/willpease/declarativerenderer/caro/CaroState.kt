@@ -1,10 +1,10 @@
 package com.willpease.declarativerenderer.caro
 
 import android.graphics.Color.*
-import com.willpease.declarativerenderer.StateManager
 
 /**
- * Created by willpease on 3/10/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 class CaroState {
@@ -31,7 +31,4 @@ class CaroState {
             arrayOf(WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE)
     )
 
-    companion object {
-        val CaroStateManager = StateManager(CaroState())
-    }
 }

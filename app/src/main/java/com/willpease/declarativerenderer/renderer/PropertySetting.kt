@@ -1,7 +1,8 @@
-package com.willpease.declarativerenderer
+package com.willpease.declarativerenderer.renderer
 
 /**
- * Created by willpease on 3/8/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 class PropertySetting {

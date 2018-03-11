@@ -1,10 +1,11 @@
-package com.willpease.declarativerenderer
+package com.willpease.declarativerenderer.renderer
 
 import android.content.Context
 import android.view.View
 
 /**
- * Created by willpease on 3/8/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 class Element(val ctor: (Context) -> View, props: Array<PropertySetting> = emptyArray(), val children: Array<Element> = emptyArray()) {

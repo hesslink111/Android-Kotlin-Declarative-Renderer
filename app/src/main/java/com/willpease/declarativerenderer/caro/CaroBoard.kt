@@ -1,50 +1,50 @@
 package com.willpease.declarativerenderer.caro
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color.BLACK
 import android.widget.Button
 import android.widget.LinearLayout
-import com.willpease.declarativerenderer.Component
-import com.willpease.declarativerenderer.E
-import com.willpease.declarativerenderer.Element
-import com.willpease.declarativerenderer.P
+import com.willpease.declarativerenderer.renderer.Component
+import com.willpease.declarativerenderer.renderer.E
+import com.willpease.declarativerenderer.renderer.Element
+import com.willpease.declarativerenderer.renderer.P
 import com.willpease.declarativerenderer.dimensionutils.dpToPx
 
 /**
- * Created by willpease on 3/10/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 class CaroBoard(context: Context) : Component(context) {
 
     override fun componentWillMount() {
-        CaroState.CaroStateManager.stateChangeObservers.add(::stateChanged)
+        CaroStateManager.observers.add(::stateChanged)
     }
 
     override fun componentWillUnmount() {
-        CaroState.CaroStateManager.stateChangeObservers.remove(::stateChanged)
+        CaroStateManager.observers.remove(::stateChanged)
     }
 
     fun stateChanged(newState: CaroState) {
         update()
     }
 
-    fun onButtonClick(rowIndex: Int, columnIndex: Int) {
-        CaroState.CaroStateManager.state.colors[rowIndex][columnIndex] = BLACK
-        CaroState.CaroStateManager.updateState()
+    fun buttonClicked(rowIndex: Int, columnIndex: Int) {
+        CaroStateManager.state.colors[rowIndex][columnIndex] = BLACK
+        CaroStateManager.updateState()
     }
 
     override fun render(): Element {
 
         // Create rows
-        val caroRows = CaroState.CaroStateManager.state.colors.mapIndexed{ rowIndex, sRow ->
+        val caroRows = CaroStateManager.state.colors.mapIndexed{ rowIndex, sRow ->
             E(::LinearLayout, arrayOf(
                     P().set(LinearLayout::setOrientation, LinearLayout.HORIZONTAL)
             ), sRow.mapIndexed { columnIndex, sSquareValue ->
                 E(::Button, arrayOf(
                         P().set(Button::setBackgroundColor, sSquareValue),
                         P().set(Button::setLayoutParams, LinearLayout.LayoutParams(10.dpToPx, 10.dpToPx)),
-                        P().set(Button::setOnClickListener, OnClickListener { onButtonClick(rowIndex, columnIndex) })
+                        P().set(Button::setOnClickListener, OnClickListener { buttonClicked(rowIndex, columnIndex) })
                 ))
             }.toTypedArray())
         }.toTypedArray()

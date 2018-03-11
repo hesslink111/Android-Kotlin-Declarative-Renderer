@@ -3,7 +3,8 @@ package com.willpease.declarativerenderer.dimensionutils
 import android.content.res.Resources
 
 /**
- * Created by willpease on 3/11/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 val Int.pxToDp: Int

@@ -1,4 +1,4 @@
-package com.willpease.declarativerenderer
+package com.willpease.declarativerenderer.renderer
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,8 @@ import android.widget.FrameLayout
 import kotlin.math.max
 
 /**
- * Created by willpease on 3/8/18.
+ * @author Will Pease
+ * @date 3/10/18
  */
 
 abstract class Component(context: Context) : FrameLayout(context) {
