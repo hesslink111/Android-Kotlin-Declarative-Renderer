@@ -14,7 +14,6 @@ abstract class Component(context: Context) : FrameLayout(context) {
 
     // Null if not mounted
     var element: Element? = null
-
     var isTransactionStarted = false
 
     fun update() {
@@ -33,10 +32,11 @@ abstract class Component(context: Context) : FrameLayout(context) {
         isTransactionStarted = false
     }
 
+    open fun componentWillMount() {}
+    open fun componentDidMount() {}
+    open fun componentWillUnmount() {}
+    open fun setChildren(children: Array<Element>) {}
     abstract fun render(): Element
-    abstract fun componentWillMount()
-    abstract fun componentDidMount()
-    abstract fun componentWillUnmount()
 
     /**
      * Replace an instance based on the element oldElement with an instance based on the element
@@ -44,8 +44,8 @@ abstract class Component(context: Context) : FrameLayout(context) {
      */
     fun mount(parentInstance: ViewGroup, indexInParent: Int, newElement: Element?, oldElement: Element?) {
         val oldInstance = parentInstance.getChildAt(indexInParent)
-        var newInstance: View?
-        var changedProps: List<PropertySetting>?
+        val newInstance: View?
+        val changedProps: List<PropertySetting>?
 
         // Find newInstance
         if(newElement == null) {
@@ -79,14 +79,26 @@ abstract class Component(context: Context) : FrameLayout(context) {
         }
 
         // apply children
-        // do something else if newinstance is a component
         if(newInstance != null && newInstance is ViewGroup && newInstance !is Component) {
-            val numNewChildren = newElement?.children?.size ?: 0
-            val numOldChildren = oldElement?.children?.size ?: 0
-            for(i in (0 until max(numNewChildren, numOldChildren)).reversed()) {
-                val newChildElement = newElement?.children?.getOrNull(i)
-                val oldChildElement = oldElement?.children?.getOrNull(i)
-                mount(newInstance, i, newChildElement, oldChildElement)
+            if(newInstance is Component) {
+                // do something else if newinstance is a component
+                newInstance.setChildren(newElement?.children ?: emptyArray())
+            } else {
+                // Mount the children
+                val numNewChildren = newElement?.children?.size ?: 0
+                val numOldChildren = oldElement?.children?.size ?: 0
+
+                // Add in counting order, remove in reverse order
+                val childChangeRange = if (numNewChildren > numOldChildren) {
+                    0 until max(numNewChildren, numOldChildren)
+                } else {
+                    (0 until max(numNewChildren, numOldChildren)).reversed()
+                }
+                for (i in childChangeRange) {
+                    val newChildElement = newElement?.children?.getOrNull(i)
+                    val oldChildElement = oldElement?.children?.getOrNull(i)
+                    mount(newInstance, i, newChildElement, oldChildElement)
+                }
             }
         }
 

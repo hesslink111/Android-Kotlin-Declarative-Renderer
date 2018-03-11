@@ -6,9 +6,9 @@ package com.willpease.declarativerenderer
 
 class StateManager<T>(initialState: T) {
     var state: T = initialState
-    val stateChangeObservers: List<(T)->Unit> = mutableListOf()
+    val stateChangeObservers: MutableList<(T)->Unit> = mutableListOf()
 
-    fun updateState(newState: T) {
+    fun updateState(newState: T = state) {
         this.state = newState
         for(observer in stateChangeObservers) {
             observer(this.state)

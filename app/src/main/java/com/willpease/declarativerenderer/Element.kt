@@ -7,21 +7,8 @@ import android.view.View
  * Created by willpease on 3/8/18.
  */
 
-class Element {
+class Element(val ctor: (Context) -> View, props: Array<PropertySetting> = emptyArray(), val children: Array<Element> = emptyArray()) {
 
-    val ctor: (Context) -> View
-    val props: Map<Any, PropertySetting>
-    val children: Array<Element>
+    val props: Map<Any, PropertySetting> = mapOf( *props.map { it.method as Any to it }.toTypedArray())
 
-    constructor(ctor: (Context) -> View, props: Array<PropertySetting>, children: Array<Element>) {
-        this.ctor = ctor
-        this.props = mapOf( *props.map { it.method as Any to it }.toTypedArray())
-        this.children = children
-    }
-
-    constructor(ctor: (Context) -> View, props: Array<PropertySetting>) {
-        this.ctor = ctor
-        this.props = mapOf( *props.map { it.method as Any to it }.toTypedArray())
-        this.children = emptyArray()
-    }
 }

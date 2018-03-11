@@ -6,9 +6,10 @@ import android.os.Bundle
 
 class MainActivity : AppCompatActivity() {
 
-    var mainComponent: MainComponent? = null
+    // Component instance -- must be created while activity is alive.
+    private var mainComponent: MainComponent? = null
 
-    fun getMainComponent(activity: Activity): MainComponent {
+    private fun getMainComponent(activity: Activity): MainComponent {
         return synchronized(this, {
             val component = mainComponent
             if(component != null) {
