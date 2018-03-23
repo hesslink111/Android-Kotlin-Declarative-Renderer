@@ -2,13 +2,11 @@ package com.willpease.declarativerenderer.caro
 
 import android.content.Context
 import android.graphics.Color.BLACK
+import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import com.willpease.declarativerenderer.renderer.Component
-import com.willpease.declarativerenderer.renderer.E
-import com.willpease.declarativerenderer.renderer.Element
-import com.willpease.declarativerenderer.renderer.P
 import com.willpease.declarativerenderer.dimensionutils.dpToPx
+import com.willpease.declarativerenderer.renderer.*
 
 /**
  * @author Will Pease
@@ -34,24 +32,24 @@ class CaroBoard(context: Context) : Component(context) {
         CaroStateManager.updateState()
     }
 
-    override fun render(): Element {
+    override fun render(): Element<View> {
 
         // Create rows
         val caroRows = CaroStateManager.state.colors.mapIndexed{ rowIndex, sRow ->
-            E(::LinearLayout, arrayOf(
-                    P().set(LinearLayout::setOrientation, LinearLayout.HORIZONTAL)
+            E<View>(::LinearLayout, arrayOf(
+                    p(LinearLayout::setOrientation, LinearLayout.HORIZONTAL)
             ), sRow.mapIndexed { columnIndex, sSquareValue ->
                 E(::Button, arrayOf(
-                        P().set(Button::setBackgroundColor, sSquareValue),
-                        P().set(Button::setLayoutParams, LinearLayout.LayoutParams(10.dpToPx, 10.dpToPx)),
-                        P().set(Button::setOnClickListener, OnClickListener { buttonClicked(rowIndex, columnIndex) })
+                        p(Button::setBackgroundColor, sSquareValue),
+//                        p(Button::setLayoutParams, LinearLayout.LayoutParams(10.dpToPx, 10.dpToPx)),
+                        p(Button::setOnClickListener, OnClickListener { buttonClicked(rowIndex, columnIndex) })
                 ))
             }.toTypedArray())
         }.toTypedArray()
 
         // Put rows in linear layout
-        return E(::LinearLayout, arrayOf(
-                P().set(LinearLayout::setOrientation, LinearLayout.VERTICAL)
+        return E<View>(::LinearLayout, arrayOf(
+                p(LinearLayout::setOrientation, LinearLayout.VERTICAL)
         ), caroRows)
     }
 

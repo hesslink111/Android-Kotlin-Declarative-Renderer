@@ -8,8 +8,13 @@ import android.view.View
  * @date 3/10/18
  */
 
-class Element(val ctor: (Context) -> View, props: Array<PropertySetting> = emptyArray(), val children: Array<Element> = emptyArray()) {
+typealias E<T> = Element<T>
 
-    val props: Map<Any, PropertySetting> = mapOf( *props.map { it.method as Any to it }.toTypedArray())
+class Element<out T: View>(
+        val ctor: (Context) -> T, props: Array<Prop> = emptyArray(),
+        var children: Array<Element<View>> = emptyArray(),
+        var ref: (e: Any)->Unit = {}) {
+
+    var props: Map<Any, Prop> = mapOf( *props.map { it.method to it }.toTypedArray())
 
 }

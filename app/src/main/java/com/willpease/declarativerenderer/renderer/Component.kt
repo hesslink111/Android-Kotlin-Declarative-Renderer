@@ -14,7 +14,7 @@ import kotlin.math.max
 abstract class Component(context: Context) : FrameLayout(context) {
 
     // Null if not mounted
-    var element: Element? = null
+    var element: Element<View>? = null
     var isTransactionStarted = false
 
     fun update() {
@@ -36,17 +36,17 @@ abstract class Component(context: Context) : FrameLayout(context) {
     open fun componentWillMount() {}
     open fun componentDidMount() {}
     open fun componentWillUnmount() {}
-    open fun setChildren(children: Array<Element>) {}
-    abstract fun render(): Element
+    open fun setChildren(children: Array<Element<View>>) {}
+    abstract fun render(): Element<View>
 
     /**
      * Replace an instance based on the element oldElement with an instance based on the element
      * newElement in the instance parentInstance at the index indexInParent.
      */
-    fun mount(parentInstance: ViewGroup, indexInParent: Int, newElement: Element?, oldElement: Element?) {
+    fun mount(parentInstance: ViewGroup, indexInParent: Int, newElement: Element<View>?, oldElement: Element<View>?) {
         val oldInstance = parentInstance.getChildAt(indexInParent)
         val newInstance: View?
-        val changedProps: List<PropertySetting>?
+        val changedProps: List<Prop>?
 
         // Find newInstance
         if(newElement == null) {
@@ -60,12 +60,16 @@ abstract class Component(context: Context) : FrameLayout(context) {
             newInstance = oldInstance
             // use changed props
             changedProps = newElement.props
-                    .filter{entry -> !oldElement.props.containsKey(entry.key) || oldElement.props[entry.key] != entry.value}
+                    .filter{entry: Map.Entry<Any, Prop> -> !oldElement.props.containsKey(entry.key) || oldElement.props[entry.key] != entry.value}
                     .values.toList()
         }
 
         // apply changed props
         if(newInstance != null) {
+
+            // Run ref function
+            newElement?.ref?.invoke(newInstance)
+
             if(newInstance is Component) {
                 newInstance.startTransaction()
             }
@@ -76,6 +80,7 @@ abstract class Component(context: Context) : FrameLayout(context) {
 
             if(newInstance is Component) {
                 newInstance.endTransaction()
+                newInstance.update()
             }
         }
 
